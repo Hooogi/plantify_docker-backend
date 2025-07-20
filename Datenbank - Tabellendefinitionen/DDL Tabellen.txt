@@ -7,6 +7,8 @@ CREATE TABLE plant_pot
     pot_name VARCHAR(30) UNIQUE
 );
 
+//--------------------------------------------------------------------
+
 CREATE TABLE sensor_reading
 (
     reading_id      INT PRIMARY KEY AUTO_INCREMENT,
@@ -20,12 +22,16 @@ CREATE TABLE sensor_reading
     FOREIGN KEY (pot_id) REFERENCES plant_pot(pot_id) ON DELETE CASCADE
 );
 
+//--------------------------------------------------------------------
+
 CREATE TABLE user_profile
 (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     user_mail VARCHAR(64) UNIQUE,
     password_hash VARCHAR(100)
 );
+
+//--------------------------------------------------------------------
 
 CREATE TABLE user_pot_assignment
 (
@@ -35,6 +41,8 @@ CREATE TABLE user_pot_assignment
     FOREIGN KEY (pot_id) references plant_pot(pot_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) references user_profile(user_id) ON DELETE CASCADE
 );
+
+//--------------------------------------------------------------------
 
 CREATE TABLE plant_profile
 (
@@ -47,6 +55,8 @@ CREATE TABLE plant_profile
     target_air_humidity_percent DECIMAL(4,1),
     target_soil_moisture_percent DECIMAL(4,1)
 );
+
+//--------------------------------------------------------------------
 
 CREATE TABLE plant_pot_assignment
 (
