@@ -1,0 +1,71 @@
+#Definitionen der Views
+
+CREATE OR REPLACE VIEW viw_AllValues_Today AS
+SELECT
+    sd.pot_id,
+    sd.temperature,
+    sd.air_humidity,
+    sd.ground_humidity,
+    sd.created
+FROM
+    sensor_data sd
+WHERE
+    DATE(sd.created) = DATE(NOW());
+
+--------------------------------------------------------------------
+
+CREATE OR REPLACE VIEW viw_SunlightPerDay_last30Days AS
+SELECT
+    sd.pot_id,
+    DATE(sd.created) AS measurement_date,
+    SUM(sd.sunlight)/2 AS HoS
+FROM
+    sensor_data sd
+WHERE
+    sd.created >= DATE(NOW()) - INTERVAL 30 DAY
+GROUP BY
+    sd.pot_id, DATE(sd.created);
+
+--------------------------------------------------------------------
+
+CREATE OR REPLACE VIEW viw_AverageMeasurements_MTD AS
+SELECT
+    sd.pot_id,
+    DATE(sd.created),
+    AVG(sd.temperature) AS avg_temperature,
+    AVG(sh.HoS) AS avg_hours_of_sunlight,
+    AVG(sd.air_humidity) AS avg_air_humidity,
+    AVG(sd.ground_humidity) AS avg_ground_humidity
+FROM
+    sensor_data sd
+JOIN
+    viw_SunlightPerDay_last30Days sh ON sd.pot_id = sh.pot_id
+WHERE
+    sd.created >= DATE_FORMAT(NOW(), '%Y-%m-01')
+GROUP BY
+    sd.pot_id, DATE(sd.created);
+
+--------------------------------------------------------------------
+
+CREATE OR REPLACE VIEW viw_LatestValuePerPot AS
+SELECT
+    sd.pot_id,
+    sd.temperature,
+    sd.ground_humidity,
+    sd.air_humidity,
+    sd.created
+FROM
+    sensor_data sd
+JOIN (
+    SELECT
+        pot_id,
+        MAX(created) AS created
+    FROM
+        sensor_data
+    GROUP BY
+        pot_id
+) AS lpp
+ON
+    sd.pot_id = lpp.pot_id AND sd.created = lpp.created;
+
+--------------------------------------------------------------------
