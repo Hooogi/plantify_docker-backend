@@ -1,0 +1,25 @@
+//Definition von Admin für Entwicklung und externen Zugriff
+CREATE USER 'admin'@'%' IDENTIFIED BY 'thws2025';
+GRANT ALL PRIVILEGES ON smartplantpot.* TO 'admin'@'%';
+
+//Definition für api_user
+
+CREATE USER 'api_user'@'172.%.%.%' IDENTIFIED BY 'thws2025';
+
+GRANT SELECT ON smartplantpot.viw_LatestValuePerPot TO 'api_user'@'172.%.%.%';
+GRANT SELECT ON smartplantpot.viw_AllValues_Today TO 'api_user'@'172.%.%.%';
+GRANT SELECT ON smartplantpot.viw_SunlightPerDay_last30Days TO 'api_user'@'172.%.%.%';
+GRANT SELECT ON smartplantpot.viw_AverageMeasurements_MTD TO 'api_user'@'172.%.%.%';
+GRANT SELECT ON smartplantpot.viw_PlantsForUser TO 'api_user'@'172.%.%.%';
+GRANT SELECT ON smartplantpot.viw_PotsForUser TO 'api_user'@'172.%.%.%';
+GRANT INSERT, UPDATE, DELETE ON smartplantpot.user_profile TO 'api_user'@'172.%.%.%';
+GRANT INSERT, UPDATE, DELETE ON smartplantpot.plant_profile TO 'api_user'@'172.%.%.%';
+GRANT INSERT, UPDATE, DELETE ON smartplantpot.user_pot_assignment TO 'api_user'@'172.%.%.%';
+GRANT UPDATE, DELETE ON smartplantpot.plant_pot TO 'api_user'@'172.%.%.%';
+
+//Definition für sensor_writer
+
+CREATE USER 'sensor_writer'@'172.%.%.%' IDENTIFIED BY 'thws2025';
+
+GRANT INSERT ON smartplantpot.sensor_reading TO 'sensor_writer'@'172.%.%.%';
+GRANT SELECT,INSERT ON smartplantpot.plant_pot TO 'sensor_writer'@'172.%.%.%';
