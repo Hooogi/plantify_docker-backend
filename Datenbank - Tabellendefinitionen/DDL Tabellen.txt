@@ -64,7 +64,7 @@ CREATE TABLE plant_pot_assignment
     pot_id INT NOT NULL,
     plant_id INT NOT NULL,
     assigned_from TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    assigned_to TIMESTAMP DEFAULT NULL,
+    assigned_to TIMESTAMP NULL DEFAULT NULL,
     FOREIGN KEY (pot_id) references plant_pot(pot_id) ON DELETE CASCADE,
     FOREIGN KEY (plant_id) references plant_profile(plant_id) ON DELETE CASCADE
 );
