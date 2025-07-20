@@ -1,0 +1,61 @@
+#Definitionen der Tabellen und der Trigger
+
+CREATE TABLE plant_pot
+(
+    pot_id INT PRIMARY KEY AUTO_INCREMENT,
+    pot_mac VARCHAR(17) UNIQUE,
+    pot_name VARCHAR(30) UNIQUE
+);
+
+CREATE TABLE sensor_reading
+(
+    reading_id      INT PRIMARY KEY AUTO_INCREMENT,
+    pot_id          INT,
+    created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    temperature     DECIMAL(3, 1),
+    sunlight        TINYINT(1),
+    air_humidity    DECIMAL(4, 1),
+    soil_moisture DECIMAL(4, 1),
+    UNIQUE KEY pot_time (pot_id, created),
+    FOREIGN KEY (pot_id) REFERENCES plant_pot(pot_id) ON DELETE CASCADE
+);
+
+CREATE TABLE user_profile
+(
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_mail VARCHAR(64) UNIQUE,
+    password_hash VARCHAR(100)
+);
+
+CREATE TABLE user_pot_assignment
+(
+    pot_id INT,
+    user_id INT,
+    PRIMARY KEY(pot_id,user_id),
+    FOREIGN KEY (pot_id) references plant_pot(pot_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) references user_profile(user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE plant_profile
+(
+    plant_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(64),
+    description VARCHAR(254),
+    irrigation_cycle_days INT,
+    target_temperature_celsius DECIMAL(3,1),
+    target_sunlight_hours INT,
+    target_air_humidity_percent DECIMAL(4,1),
+    target_soil_moisture_percent DECIMAL(4,1)
+);
+
+CREATE TABLE plant_pot_assignment
+(
+    assignment_id INT PRIMARY KEY AUTO_INCREMENT,
+    pot_id INT NOT NULL,
+    plant_id INT NOT NULL,
+    assigned_from TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    assigned_to TIMESTAMP DEFAULT NULL,
+    FOREIGN KEY (pot_id) references plant_pot(pot_id) ON DELETE CASCADE,
+    FOREIGN KEY (plant_id) references plant_profile(plant_id) ON DELETE CASCADE
+);
+
