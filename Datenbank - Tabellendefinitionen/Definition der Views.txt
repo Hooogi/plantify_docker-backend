@@ -69,3 +69,32 @@ ON
     sd.pot_id = lpp.pot_id AND sd.created = lpp.created;
 
 //--------------------------------------------------------------------
+
+CREATE OR REPLACE VIEW viw_potsForUser AS
+SELECT
+    upa.user_id,
+    upa.pot_id,
+    pp.pot_name
+FROM
+    user_pot_assignment upa
+JOIN plant_pot pp on pp.pot_id = upa.pot_id;
+
+//--------------------------------------------------------------------
+
+CREATE OR REPLACE VIEW viw_PlantsForUser AS
+SELECT
+    vPFU.pot_id,
+    pp.plant_id,
+    name,
+    description,
+    irrigation_cycle_days,
+    target_temperature_celsius,
+    target_sunlight_hours,
+    target_air_humidity_percent,
+    target_soil_moisture_percent,
+    assigned_from,
+    assigned_to
+FROM
+    plant_profile pp
+LEFT JOIN plant_pot_assignment ppa ON pp.plant_id = ppa.plant_id
+LEFT JOIN viw_PotsForUser vPFU on ppa.pot_id = vPFU.pot_id;
